@@ -1,0 +1,68 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+enum PropertyStatus {
+  FOR_SALE
+  FOR_RENT
+}
+
+enum PropertyType {
+  HOUSE
+  APARTMENT
+  CONDO
+  VILLA
+  PENTHOUSE
+}
+
+model Agent {
+  id         String     @id @default(uuid())
+  name       String
+  email      String     @unique
+  phone      String
+  image      String
+  properties Property[]
+}
+
+model Property {
+  id          String         @id @default(uuid())
+  title       String
+  description String
+  price       Float
+  location    String
+  city        String
+  type        PropertyType
+  status      PropertyStatus
+  bedrooms    Int
+  bathrooms   Int
+  areaSize    Float
+  images      String[]
+  amenities   String[]
+  lat         Float?
+  lng         Float?
+  isFeatured  Boolean        @default(false)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  agentId     String
+  agent       Agent          @relation(fields: [agentId], references: [id])
+  inquiries   Inquiry[]
+
+  @@index([city])
+  @@index([price])
+}
+
+model Inquiry {
+  id         String   @id @default(uuid())
+  fullName   String
+  email      String
+  phone      String
+  message    String
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id])
+  createdAt  DateTime @default(now())
+}

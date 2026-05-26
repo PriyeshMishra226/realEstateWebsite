@@ -1,0 +1,288 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
+
+/* ============================================================
+   DESIGN SYSTEM — LUXE Real Estate
+   ============================================================ */
+
+/* Layer order */
+@layer reset, base, theme, components, utilities;
+
+/* ============================================================
+   DESIGN TOKENS (CSS Custom Properties)
+   ============================================================ */
+:root {
+  /* Color palette — Tier 1: Literal */
+  --color-amber-400: oklch(83% 0.18 85);
+  --color-amber-500: oklch(76% 0.19 75);
+  --color-amber-600: oklch(69% 0.19 68);
+  --color-slate-50:  oklch(98% 0.004 265);
+  --color-slate-100: oklch(96% 0.006 265);
+  --color-slate-200: oklch(92% 0.008 265);
+  --color-slate-400: oklch(71% 0.013 265);
+  --color-slate-500: oklch(61% 0.015 265);
+  --color-slate-600: oklch(51% 0.016 265);
+  --color-slate-700: oklch(41% 0.015 265);
+  --color-slate-800: oklch(31% 0.013 265);
+  --color-slate-900: oklch(21% 0.012 265);
+  --color-slate-950: oklch(14% 0.010 265);
+
+  /* Color palette — Tier 2: Semantic */
+  --color-accent:        var(--color-amber-500);
+  --color-accent-hover:  var(--color-amber-600);
+  --color-surface:       white;
+  --color-surface-subtle: var(--color-slate-50);
+  --color-text-primary:  var(--color-slate-900);
+  --color-text-secondary: var(--color-slate-500);
+  --color-border:        var(--color-slate-200);
+
+  /* Typography */
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-display: 'Outfit', system-ui, sans-serif;
+
+  /* Spacing / Radii */
+  --radius-card: 1rem;     /* 16px */
+  --radius-input: 0.75rem; /* 12px */
+  --radius-btn:   0.75rem;
+
+  /* Shadow */
+  --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.05), 0 1px 2px -1px rgb(0 0 0 / 0.05);
+  --shadow-card-hover: 0 20px 40px -12px rgb(0 0 0 / 0.15);
+  --shadow-amber: 0 10px 30px -5px rgb(245 158 11 / 0.3);
+
+  /* Transitions */
+  --transition-base: 200ms ease;
+  --transition-slow: 400ms ease;
+
+  /* Gradient interpolation space support */
+  --in-oklab: ;
+  --in-oklch: ;
+}
+
+@supports (background: linear-gradient(in oklab, white, black)) {
+  :root {
+    --in-oklab: in oklab;
+    --in-oklch: in oklch;
+  }
+}
+
+/* ============================================================
+   BASE STYLES
+   ============================================================ */
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    font-family: var(--font-sans);
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: var(--color-surface);
+    color: var(--color-text-primary);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    text-wrap: balance;
+    line-height: 1.15;
+  }
+
+  p {
+    text-wrap: pretty;
+    max-inline-size: 75ch;
+  }
+
+  img, video {
+    max-width: 100%;
+    display: block;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  button {
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  /* Focus management — only show rings for keyboard users */
+  :focus-visible {
+    outline: 2px solid var(--color-amber-500);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--color-slate-100); }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-slate-300);
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover { background: var(--color-slate-400); }
+  @supports (scrollbar-color: auto) {
+    * { scrollbar-color: var(--color-slate-300) var(--color-slate-100); scrollbar-width: thin; }
+  }
+
+  /* Selection */
+  ::selection {
+    background: oklch(83% 0.18 85 / 0.3);
+    color: var(--color-slate-900);
+  }
+
+  /* Accent color for browser UI */
+  :root { accent-color: var(--color-amber-500); }
+}
+
+/* ============================================================
+   COMPONENTS
+   ============================================================ */
+@layer components {
+  /* Glassmorphism card */
+  .glass {
+    background: rgb(255 255 255 / 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgb(255 255 255 / 0.2);
+  }
+
+  .glass-dark {
+    background: rgb(0 0 0 / 0.5);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgb(255 255 255 / 0.1);
+  }
+
+  /* Primary button */
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: linear-gradient(to bottom right var(--in-oklch), var(--color-amber-500), var(--color-amber-600));
+    color: white;
+    font-weight: 600;
+    padding: 0.875rem 2rem;
+    border-radius: var(--radius-btn);
+    transition: all var(--transition-base);
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.1);
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    filter: brightness(1.1);
+    box-shadow: var(--shadow-amber);
+    translate: 0 -1px;
+  }
+
+  .btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Outline button */
+  .btn-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border: 2px solid currentColor;
+    font-weight: 600;
+    padding: 0.875rem 2rem;
+    border-radius: var(--radius-btn);
+    transition: all var(--transition-base);
+  }
+
+  /* Property card skeleton loader */
+  .skeleton {
+    background: linear-gradient(
+      90deg,
+      var(--color-slate-100) 25%,
+      var(--color-slate-200) 50%,
+      var(--color-slate-100) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: var(--radius-card);
+  }
+
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  /* Badge */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.375rem 0.75rem;
+    border-radius: 0.5rem;
+  }
+
+  .badge-sale {
+    background: rgb(16 185 129 / 0.1);
+    color: rgb(5 150 105);
+  }
+
+  .badge-rent {
+    background: rgb(59 130 246 / 0.1);
+    color: rgb(37 99 235);
+  }
+}
+
+/* ============================================================
+   SCROLL-DRIVEN ANIMATIONS
+   Uses @supports for progressive enhancement
+   ============================================================ */
+@media (prefers-reduced-motion: no-preference) {
+  @supports ((animation-timeline: view()) and (animation-range: entry)) {
+    @keyframes fade-up-in {
+      from {
+        opacity: 0;
+        translate: 0 40px;
+      }
+    }
+
+    @keyframes fade-up-out {
+      to {
+        opacity: 0;
+        translate: 0 -20px;
+      }
+    }
+
+    .scroll-reveal {
+      animation:
+        fade-up-in 0.6s linear backwards,
+        fade-up-out 0.4s linear forwards;
+      animation-timeline: view();
+      animation-range: entry 0% entry 30%, exit 70% exit 100%;
+    }
+  }
+}
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+@property --animation-reduced {
+  syntax: "*";
+  inherits: false;
+  initial-value: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-reveal {
+    animation: none !important;
+  }
+}
